@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Olga Alexashenko](https://up.htmlacademy.ru/javascript/10/user/103731).
-* Наставник: Игорь Алексеенко.
+* Наставник: [Игорь Алексеенко](https://up.htmlacademy.ru/javascript/10/user/100868).
 
 ---
 

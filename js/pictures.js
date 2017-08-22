@@ -37,7 +37,7 @@ function getUrls(count) {
   var urls = [];
 
   for (var i = 0; i < count; i++) {
-    urls[i] = 'photos/' + (i + 1)  + '.jpg';
+    urls[i] = 'photos/' + (i + 1) + '.jpg';
   }
 
   return urls;

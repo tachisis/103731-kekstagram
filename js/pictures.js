@@ -37,7 +37,7 @@ function getUrls(count) {
   var urls = [];
 
   for (var i = 0; i < count; i++) {
-    urls[i] = i + 1;
+    urls[i] = 'photos/' + (i + 1)  + '.jpg';
   }
 
   return urls;
@@ -45,7 +45,7 @@ function getUrls(count) {
 
 function getRandomComments(comments) {
   var shuffledComments = shuffle(comments);
-  var randomCount = getRandom(1, 2).toFixed();
+  var randomCount = Math.round(getRandom(1, 2));
 
   comments = [];
 
@@ -57,15 +57,14 @@ function getRandomComments(comments) {
 }
 
 function getPhotos(comments, count) {
-  var shuffledUrls = shuffle(getUrls(count));
-
   var photos = [];
+  var urls = shuffle(getUrls(count));
 
   for (var i = 0; i < count; i++) {
     photos[i] = {
-      url: 'photos/' + shuffledUrls[i] + '.jpg',
-      likes: getRandom(15, 200).toFixed(),
-      comments: getRandomComments(comments).length
+      url: urls[i],
+      likes: Math.round(getRandom(15, 200)),
+      comments: getRandomComments(comments)
     };
   }
 
@@ -77,7 +76,7 @@ function getPhotoElement(photos) {
 
   photo.querySelector('.picture > img').src = photos.url;
   photo.querySelector('.picture-likes').textContent = photos.likes;
-  photo.querySelector('.picture-comments').textContent = photos.comments;
+  photo.querySelector('.picture-comments').textContent = photos.comments.length;
 
   return photo;
 }
@@ -98,7 +97,7 @@ function showPhotoOverlay(photo) {
   var photoOverlay = document.querySelector('.gallery-overlay');
   photoOverlay.querySelector('.gallery-overlay-image').src = photo.url;
   photoOverlay.querySelector('.likes-count').textContent = photo.likes;
-  photoOverlay.querySelector('.comments-count').textContent = photo.comments;
+  photoOverlay.querySelector('.comments-count').textContent = photo.comments.length;
   photoOverlay.classList.remove('hidden');
 }
 

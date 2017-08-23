@@ -33,16 +33,6 @@ function shuffle(array) {
   return array;
 }
 
-function getUrls(count) {
-  var urls = [];
-
-  for (var i = 0; i < count; i++) {
-    urls[i] = 'photos/' + (i + 1) + '.jpg';
-  }
-
-  return urls;
-}
-
 function getRandomComments(comments) {
   var shuffledComments = shuffle(comments);
   var randomCount = Math.round(getRandom(1, 2));
@@ -58,17 +48,16 @@ function getRandomComments(comments) {
 
 function getPhotos(comments, count) {
   var photos = [];
-  var urls = shuffle(getUrls(count));
 
   for (var i = 0; i < count; i++) {
     photos[i] = {
-      url: urls[i],
+      url: 'photos/' + (i + 1) + '.jpg',
       likes: Math.round(getRandom(15, 200)),
       comments: getRandomComments(comments)
     };
   }
 
-  return photos;
+  return shuffle(photos);
 }
 
 function getPhotoElement(photos) {
@@ -93,11 +82,20 @@ function renderPhotos(photos, target) {
   photosListElement.appendChild(fragment);
 }
 
-function showPhotoOverlay(photo) {
+function fillPhoto(photo, target) {
+  var src = photo.querySelector('.picture > img').src;
+  var likes = photo.querySelector('.picture-likes').textContent;
+  var comments = photo.querySelector('.picture-comments').textContent;
+
+  target.querySelector('.gallery-overlay-image').src = src;
+  target.querySelector('.likes-count').textContent = likes;
+  target.querySelector('.comments-count').textContent = comments;
+}
+
+function openPhoto(elem) {
+  var photo = document.querySelectorAll('.picture')[elem];
   var photoOverlay = document.querySelector('.gallery-overlay');
-  photoOverlay.querySelector('.gallery-overlay-image').src = photo.url;
-  photoOverlay.querySelector('.likes-count').textContent = photo.likes;
-  photoOverlay.querySelector('.comments-count').textContent = photo.comments.length;
+  fillPhoto(photo, photoOverlay);
   photoOverlay.classList.remove('hidden');
 }
 
@@ -105,4 +103,4 @@ var photos = getPhotos(COMMENTS, 25);
 renderPhotos(photos, '.pictures');
 
 document.querySelector('.upload-overlay').classList.add('hidden');
-showPhotoOverlay(photos[0]);
+openPhoto(0);

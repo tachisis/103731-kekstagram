@@ -83,17 +83,13 @@ function renderPhotos(photos, target) {
 }
 
 function fillPhoto(photo, target) {
-  var src = photo.querySelector('.picture > img').src;
-  var likes = photo.querySelector('.picture-likes').textContent;
-  var comments = photo.querySelector('.picture-comments').textContent;
-
-  target.querySelector('.gallery-overlay-image').src = src;
-  target.querySelector('.likes-count').textContent = likes;
-  target.querySelector('.comments-count').textContent = comments;
+  target.querySelector('.gallery-overlay-image').src = photo.url;
+  target.querySelector('.likes-count').textContent = photo.likes;
+  target.querySelector('.comments-count').textContent = photo.comments.length;
 }
 
 function openPhoto(elem) {
-  var photo = document.querySelectorAll('.picture')[elem];
+  var photo = photos[elem];
   var photoOverlay = document.querySelector('.gallery-overlay');
   fillPhoto(photo, photoOverlay);
   photoOverlay.classList.remove('hidden');

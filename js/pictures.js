@@ -14,6 +14,9 @@ var photoTemplate = document
     .content
     .querySelector('.picture');
 
+var photoOverlay = document.querySelector('.gallery-overlay');
+var photoOverlayClose = photoOverlay.querySelector('.gallery-overlay-close');
+
 function getRandom(min, max) {
   return Math.random() * (max - min) + min;
 }
@@ -60,6 +63,20 @@ function getPhotos(comments, count) {
   return shuffle(photos);
 }
 
+function addPhotoOpenHandler(elem, i, photos) {
+  elem.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    openPhoto(photos, i);
+  });
+
+  elem.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === 13 || evt.keyCode === 32) {
+      evt.preventDefault();
+      openPhoto(photos, i);
+    }
+  });
+}
+
 function getPhotoElement(photos) {
   var photo = photoTemplate.cloneNode(true);
 
@@ -76,7 +93,9 @@ function renderPhotos(photos, target) {
   var count = photos.length;
 
   for (var i = 0; i < count; i++) {
-    fragment.appendChild(getPhotoElement(photos[i]));
+    var photoElem = getPhotoElement(photos[i]);
+    addPhotoOpenHandler(photoElem, i, photos);
+    fragment.appendChild(photoElem);
   }
 
   photosListElement.appendChild(fragment);
@@ -88,15 +107,46 @@ function fillPhoto(photo, target) {
   target.querySelector('.comments-count').textContent = photo.comments.length;
 }
 
-function openPhoto(elem) {
-  var photo = photos[elem];
-  var photoOverlay = document.querySelector('.gallery-overlay');
+function addPhotoCloseHandler(item) {
+  photoOverlayClose.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    closePhoto(item);
+  });
+
+  photoOverlayClose.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === 13 || evt.keyCode === 32) {
+      evt.preventDefault();
+      closePhoto(item);
+    }
+  });
+
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === 27) {
+      evt.preventDefault();
+      closePhoto(item);
+    }
+  });
+}
+
+function closePhoto(item) {
+  photoOverlay.classList.add('hidden');
+
+  var pictures = document.querySelectorAll('.picture');
+  pictures[item].focus();
+}
+
+function openPhoto(photos, item) {
+  var photo = photos[item];
+
   fillPhoto(photo, photoOverlay);
+
   photoOverlay.classList.remove('hidden');
+  photoOverlay.focus();
+
+  addPhotoCloseHandler(item);
 }
 
 var photos = getPhotos(COMMENTS, 25);
 renderPhotos(photos, '.pictures');
 
 document.querySelector('.upload-overlay').classList.add('hidden');
-openPhoto(0);

@@ -1,5 +1,11 @@
 'use strict';
 
+var KEYCODES = {
+  esc: 27,
+  enter: 13,
+  space: 32
+};
+
 var COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -63,15 +69,46 @@ function getPhotos(comments, count) {
   return shuffle(photos);
 }
 
-function addPhotoOpenHandler(elem, i, photos) {
+var openedPhoto = null;
+
+function closeHandler(evt) {
+  if (evt.type === 'keydown' && (evt.keycode === KEYCODES.space || evt.keycode === KEYCODES.enter)) {
+    photoOverlay.classList.add('hidden');
+
+    var pictures = document.querySelectorAll('.picture');
+    pictures[openedPhoto].focus();
+
+    photoOverlayClose.removeEventListener('keydown', closeHandler);
+  } else {
+    photoOverlay.classList.add('hidden');
+
+    var pictures = document.querySelectorAll('.picture');
+    pictures[openedPhoto].focus();
+
+    photoOverlayClose.removeEventListener('click', closeHandler);
+  }
+
+  photoOverlayClose.removeEventListener('keydown', closeHandler);
+  openedPhoto = null;
+}
+
+function addPhotoOpenHandlers(elem, i, photos) {
   elem.addEventListener('click', function (evt) {
     evt.preventDefault();
+    openedPhoto = i;
+    photoOverlayClose.addEventListener('click', closeHandler);
+    photoOverlayClose.addEventListener('keydown', closeHandler);
+    document.addEventListener('keydown', addPhotoEscHandler);
     openPhoto(photos, i);
   });
 
   elem.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === 13 || evt.keyCode === 32) {
+    if (evt.keyCode === KEYCODES.enter || evt.keyCode === KEYCODES.space) {
       evt.preventDefault();
+      openedPhoto = i;
+      photoOverlayClose.addEventListener('click', closeHandler);
+      photoOverlayClose.addEventListener('keydown', closeHandler);
+      document.addEventListener('keydown', addPhotoEscHandler);
       openPhoto(photos, i);
     }
   });
@@ -94,7 +131,7 @@ function renderPhotos(photos, target) {
 
   for (var i = 0; i < count; i++) {
     var photoElem = getPhotoElement(photos[i]);
-    addPhotoOpenHandler(photoElem, i, photos);
+    addPhotoOpenHandlers(photoElem, i, photos);
     fragment.appendChild(photoElem);
   }
 
@@ -107,32 +144,12 @@ function fillPhoto(photo, target) {
   target.querySelector('.comments-count').textContent = photo.comments.length;
 }
 
-function addPhotoCloseHandler(item) {
-  photoOverlayClose.addEventListener('click', function (evt) {
+function addPhotoEscHandler(evt) {
+  if (evt.keyCode === KEYCODES.esc) {
     evt.preventDefault();
-    closePhoto(item);
-  });
-
-  photoOverlayClose.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === 13 || evt.keyCode === 32) {
-      evt.preventDefault();
-      closePhoto(item);
-    }
-  });
-
-  document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === 27) {
-      evt.preventDefault();
-      closePhoto(item);
-    }
-  });
-}
-
-function closePhoto(item) {
-  photoOverlay.classList.add('hidden');
-
-  var pictures = document.querySelectorAll('.picture');
-  pictures[item].focus();
+    closeHandler(evt);
+    document.removeEventListener('keycode', addPhotoEscHandler);
+  }
 }
 
 function openPhoto(photos, item) {
@@ -142,8 +159,6 @@ function openPhoto(photos, item) {
 
   photoOverlay.classList.remove('hidden');
   photoOverlay.focus();
-
-  addPhotoCloseHandler(item);
 }
 
 var photos = getPhotos(COMMENTS, 25);

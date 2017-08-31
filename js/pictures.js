@@ -72,40 +72,39 @@ function getPhotos(comments, count) {
 var openedPhoto = null;
 
 function isActivationEvent(evt) {
-  return evt.type === 'keydown'
-    && (evt.keyCode === KeyCode.ENTER || evt.keyCode === KeyCode.SPACE)
-    ? true
-    : false;
+  return evt.keyCode === KeyCode.ENTER || evt.keyCode === KeyCode.SPACE;
 }
 
-function closePhoto(evt) {
+function onCloseButtonKeydown(evt) {
+  if (isActivationEvent(evt)) {
+    evt.preventDefault();
+    closePhoto(evt);
+  }
+}
+
+function onCloseButtonClick(evt) {
   evt.preventDefault();
+  closePhoto(evt);
+}
+
+function onPhotoOverlayEsc(evt) {
+  if (evt.keyCode === KeyCode.ESC) {
+    evt.preventDefault();
+    closePhoto(evt);
+  }
+}
+
+function closePhoto() {
   photoOverlay.classList.add('hidden');
 
   var pictures = document.querySelectorAll('.picture');
   pictures[openedPhoto].focus();
 
-  photoOverlayClose.removeEventListener('keydown', closeOnKeydownHandler);
-  photoOverlayClose.removeEventListener('click', closeOnClickHandler);
-  document.removeEventListener('keycode', closeOnEscHandler);
+  photoOverlayClose.removeEventListener('click', onCloseButtonClick);
+  photoOverlayClose.removeEventListener('keydown', onCloseButtonKeydown);
+  document.removeEventListener('keycode', onPhotoOverlayEsc);
 
   openedPhoto = null;
-}
-
-function closeOnKeydownHandler(evt) {
-  if (isActivationEvent(evt)) {
-    closePhoto(evt);
-  }
-}
-
-function closeOnClickHandler(evt) {
-  closePhoto(evt);
-}
-
-function closeOnEscHandler(evt) {
-  if (evt.keyCode === KeyCode.ESC) {
-    closePhoto(evt);
-  }
 }
 
 function addPhotoOpenHandlers(elem, i, photos) {
@@ -130,16 +129,15 @@ function fillPhoto(photo, target) {
 
 function openPhoto(photos, item) {
   openedPhoto = item;
-  var photo = photos[item];
 
-  fillPhoto(photo, photoOverlay);
+  fillPhoto(photos[item], photoOverlay);
 
   photoOverlay.classList.remove('hidden');
   photoOverlay.focus();
 
-  photoOverlayClose.addEventListener('click', closeOnClickHandler);
-  photoOverlayClose.addEventListener('keydown', closeOnKeydownHandler);
-  document.addEventListener('keydown', closeOnEscHandler);
+  photoOverlayClose.addEventListener('click', onCloseButtonClick);
+  photoOverlayClose.addEventListener('keydown', onCloseButtonKeydown);
+  document.addEventListener('keydown', onPhotoOverlayEsc);
 }
 
 function getPhotoElement(photos) {

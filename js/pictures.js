@@ -180,6 +180,7 @@ var uploadResizeDec = uploadForm.querySelector('.upload-resize-controls-button-d
 var uploadFilters = uploadForm.querySelector('.upload-effect-controls');
 var uploadFiltersInputs = uploadForm.querySelectorAll('input[name="effect"]');
 var uploadImagePreview = uploadForm.querySelector('.effect-image-preview');
+var uploadHashtags = uploadForm.querySelector('.upload-form-hashtags');
 
 var focused = false;
 var effectClass = null;
@@ -189,7 +190,7 @@ var ResizeOptions = {
   STEP: 25,
   MIN: 25,
   MAX: 100
-}
+};
 
 function closeUploadOverlay() {
   uploadOverlay.classList.toggle('hidden');
@@ -201,6 +202,28 @@ function closeUploadOverlay() {
   uploadComment.removeEventListener('blur', isFocused);
   uploadSubmit.removeEventListener('click', onUploadSubmitClick);
   uploadSubmit.removeEventListener('keydown', onUploadSubmitKeydown);
+}
+
+function checkHashtags() {
+  var hashtagsString = uploadHashtags.value;
+  if (hashtagsString !== '') {
+    var hashTags = hashtagsString.split(' ');
+
+    for (var i = 0; i < hashTags.length; i++) {
+      if (hashTags[i][0] !== '#') {
+        uploadHashtags.setCustomValidity('Хэштег должен начинаться с #');
+        return false;
+      }
+      if (hashTags[i].length > 20) {
+        uploadHashtags.setCustomValidity('Хэштег не должен быть длиннее 20 символов');
+        return false;
+      }
+    }
+
+    return hashTags.length <= 5 ? true : false;
+  } else {
+    return true;
+  }
 }
 
 function onUploadCancelKeydown(evt) {
@@ -220,15 +243,19 @@ function onUploadCancelClick(evt) {
 function onUploadSubmitKeydown(evt) {
   if (isActivationEvent(evt)) {
     evt.preventDefault();
-    closeUploadOverlay(evt);
-    uploadForm.submit();
+    if (checkHashtags()) {
+      closeUploadOverlay(evt);
+      uploadForm.submit();
+    }
   }
 }
 
 function onUploadSubmitClick(evt) {
   evt.preventDefault();
-  closeUploadOverlay(evt);
-  uploadForm.submit();
+  if (checkHashtags()) {
+    closeUploadOverlay(evt);
+    uploadForm.submit();
+  }
 }
 
 function onUploadOverlayEsc(evt) {
@@ -246,17 +273,17 @@ function isFocused() {
 }
 
 function resizeInc() {
-  if (uploadResizeDec.hasAttribute('disabled')) {
-    uploadResizeDec.removeAttribute('disabled')
-  }
   var initSize = parseInt(uploadResizeValue.getAttribute('value'), 10);
   var newSize = initSize + ResizeOptions.STEP;
   if (newSize <= ResizeOptions.MAX) {
     uploadResizeValue.setAttribute('value', newSize + '%');
     uploadImagePreview.style.transform = 'scale(' + newSize / 100 + ')';
-  } else {
-    uploadResizeInc.setAttribute('disabled', 'disabled');
-    console.log(newSize);
+    if (newSize === ResizeOptions.MAX) {
+      uploadResizeInc.setAttribute('disabled', 'disabled');
+    }
+  }
+  if (uploadResizeDec.hasAttribute('disabled') && newSize >= ResizeOptions.MIN) {
+    uploadResizeDec.removeAttribute('disabled');
   }
 }
 
@@ -266,9 +293,12 @@ function resizeDec() {
   if (newSize >= ResizeOptions.MIN) {
     uploadResizeValue.setAttribute('value', newSize + '%');
     uploadImagePreview.style.transform = 'scale(' + newSize / 100 + ')';
-  } else {
-    uploadResizeDec.setAttribute('disabled', 'disabled');
-    console.log(newSize);
+    if (newSize === ResizeOptions.MIN) {
+      uploadResizeDec.setAttribute('disabled', 'disabled');
+    }
+  }
+  if (uploadResizeInc.hasAttribute('disabled') && newSize <= ResizeOptions.MAX) {
+    uploadResizeInc.removeAttribute('disabled');
   }
 }
 

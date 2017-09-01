@@ -167,4 +167,79 @@ function renderPhotos(photos, target) {
 var photos = getPhotos(COMMENTS, 25);
 renderPhotos(photos, '.pictures');
 
-document.querySelector('.upload-overlay').classList.add('hidden');
+var uploadForm = document.querySelector('#upload-select-image');
+var uploadFile = uploadForm.querySelector('#upload-file');
+var uploadImage = uploadForm.querySelector('.upload-image');
+var uploadOverlay = uploadForm.querySelector('.upload-overlay');
+var uploadCancel = uploadForm.querySelector('.upload-form-cancel');
+var uploadSubmit = uploadForm.querySelector('.upload-form-submit');
+var uploadComment = uploadForm.querySelector('.upload-form-description');
+var focused = false;
+
+function closeUploadOverlay() {
+  uploadOverlay.classList.toggle('hidden');
+  uploadImage.classList.toggle('hidden');
+  uploadCancel.removeEventListener('click', onUploadCancelClick);
+  uploadCancel.removeEventListener('keydown', onUploadCancelKeydown);
+  document.removeEventListener('keydown', onUploadOverlayEsc);
+  uploadComment.removeEventListener('focus', isFocused);
+  uploadComment.removeEventListener('blur', isFocused);
+  uploadSubmit.removeEventListener('click', onUploadSubmitClick);
+  uploadSubmit.removeEventListener('keydown', onUploadSubmitKeydown);
+}
+
+function onUploadCancelKeydown(evt) {
+  if (isActivationEvent(evt)) {
+    evt.preventDefault();
+    closeUploadOverlay(evt);
+    uploadForm.reset();
+  }
+}
+
+function onUploadCancelClick(evt) {
+  evt.preventDefault();
+  closeUploadOverlay(evt);
+  uploadForm.reset();
+}
+
+function onUploadSubmitKeydown(evt) {
+  if (isActivationEvent(evt)) {
+    evt.preventDefault();
+    closeUploadOverlay(evt);
+    uploadForm.submit();
+  }
+}
+
+function onUploadSubmitClick(evt) {
+  evt.preventDefault();
+  closeUploadOverlay(evt);
+  uploadForm.submit();
+}
+
+function onUploadOverlayEsc(evt) {
+  if (evt.keyCode === KeyCode.ESC) {
+    evt.preventDefault();
+    if (!focused) {
+      closeUploadOverlay(evt);
+      uploadForm.reset();
+    }
+  }
+}
+
+function isFocused() {
+  focused = !focused ? true : false;
+}
+
+function onSelectPhoto(evt) {
+  uploadImage.classList.toggle('hidden');
+  uploadOverlay.classList.toggle('hidden');
+  uploadCancel.addEventListener('click', onUploadCancelClick);
+  uploadCancel.addEventListener('keydown', onUploadCancelKeydown);
+  document.addEventListener('keydown', onUploadOverlayEsc);
+  uploadComment.addEventListener('focus', isFocused);
+  uploadComment.addEventListener('blur', isFocused);
+  uploadSubmit.addEventListener('click', onUploadSubmitClick);
+  uploadSubmit.addEventListener('keydown', onUploadSubmitKeydown);
+}
+
+uploadFile.addEventListener('change', onSelectPhoto);

@@ -174,7 +174,22 @@ var uploadOverlay = uploadForm.querySelector('.upload-overlay');
 var uploadCancel = uploadForm.querySelector('.upload-form-cancel');
 var uploadSubmit = uploadForm.querySelector('.upload-form-submit');
 var uploadComment = uploadForm.querySelector('.upload-form-description');
+var uploadResizeValue = uploadForm.querySelector('.upload-resize-controls-value');
+var uploadResizeInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
+var uploadResizeDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
+var uploadFilters = uploadForm.querySelector('.upload-effect-controls');
+var uploadFiltersInputs = uploadForm.querySelectorAll('input[name="effect"]');
+var uploadImagePreview = uploadForm.querySelector('.effect-image-preview');
+
 var focused = false;
+var effectClass = null;
+
+var ResizeOptions = {
+  DEFAULT: 100,
+  STEP: 25,
+  MIN: 25,
+  MAX: 100
+}
 
 function closeUploadOverlay() {
   uploadOverlay.classList.toggle('hidden');
@@ -230,16 +245,100 @@ function isFocused() {
   focused = !focused ? true : false;
 }
 
-function onSelectPhoto(evt) {
-  uploadImage.classList.toggle('hidden');
-  uploadOverlay.classList.toggle('hidden');
+function resizeInc() {
+  if (uploadResizeDec.hasAttribute('disabled')) {
+    uploadResizeDec.removeAttribute('disabled')
+  }
+  var initSize = parseInt(uploadResizeValue.getAttribute('value'), 10);
+  var newSize = initSize + ResizeOptions.STEP;
+  if (newSize <= ResizeOptions.MAX) {
+    uploadResizeValue.setAttribute('value', newSize + '%');
+    uploadImagePreview.style.transform = 'scale(' + newSize / 100 + ')';
+  } else {
+    uploadResizeInc.setAttribute('disabled', 'disabled');
+    console.log(newSize);
+  }
+}
+
+function resizeDec() {
+  var initSize = parseInt(uploadResizeValue.getAttribute('value'), 10);
+  var newSize = initSize - ResizeOptions.STEP;
+  if (newSize >= ResizeOptions.MIN) {
+    uploadResizeValue.setAttribute('value', newSize + '%');
+    uploadImagePreview.style.transform = 'scale(' + newSize / 100 + ')';
+  } else {
+    uploadResizeDec.setAttribute('disabled', 'disabled');
+    console.log(newSize);
+  }
+}
+
+function onResizeIncClick(evt) {
+  resizeInc();
+}
+
+function onResizeIncKeydown(evt) {
+  if (isActivationEvent(evt)) {
+    resizeInc();
+  }
+}
+
+function onResizeDecClick(evt) {
+  resizeDec();
+}
+
+function onResizeDecKeydown(evt) {
+  if (isActivationEvent(evt)) {
+    resizeDec();
+  }
+}
+
+function initUploadClose() {
   uploadCancel.addEventListener('click', onUploadCancelClick);
   uploadCancel.addEventListener('keydown', onUploadCancelKeydown);
   document.addEventListener('keydown', onUploadOverlayEsc);
   uploadComment.addEventListener('focus', isFocused);
   uploadComment.addEventListener('blur', isFocused);
+}
+
+function initUploadSubmit() {
   uploadSubmit.addEventListener('click', onUploadSubmitClick);
   uploadSubmit.addEventListener('keydown', onUploadSubmitKeydown);
 }
 
-uploadFile.addEventListener('change', onSelectPhoto);
+function initResize() {
+  uploadResizeInc.addEventListener('click', onResizeIncClick);
+  uploadResizeInc.addEventListener('keydown', onResizeIncKeydown);
+  uploadResizeDec.addEventListener('click', onResizeDecClick);
+  uploadResizeDec.addEventListener('keydown', onResizeDecKeydown);
+}
+
+function onFiltersClick(evt) {
+  if (evt.target.tagName === 'INPUT') {
+    var target = evt.target;
+    for (var i = 0; i < uploadFiltersInputs.length; i++) {
+      uploadFiltersInputs[i].removeAttribute('checked');
+    }
+    target.setAttribute('checked', 'checked');
+    if (effectClass !== null) {
+      uploadImagePreview.classList.remove(effectClass);
+    }
+    effectClass = 'effect-' + target.value;
+    uploadImagePreview.classList.add(effectClass);
+  }
+}
+
+function initFilters() {
+  uploadFilters.addEventListener('click', onFiltersClick);
+}
+
+function onUploadPhoto(evt) {
+  uploadImage.classList.toggle('hidden');
+  uploadOverlay.classList.toggle('hidden');
+
+  initUploadClose();
+  initUploadSubmit();
+  initResize();
+  initFilters();
+}
+
+uploadFile.addEventListener('change', onUploadPhoto);

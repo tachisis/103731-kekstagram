@@ -202,7 +202,7 @@ body {
 
   position: absolute;
   top: 0;
-  left: 100%;
+  right: 0;
   margin-left: 10px;
 
   border: 0;
@@ -402,6 +402,10 @@ input[type=radio]:checked + .upload-effect-label .upload-effect-preview {
   color: #000;
 }
 
+.upload-form-hashtags:invalid {
+  border-color: red;
+}
+
 /* Описание */
 .upload-form-description {
   width: 470px;
@@ -419,6 +423,10 @@ input[type=radio]:checked + .upload-effect-label .upload-effect-preview {
 
 .upload-form-description:focus {
   color: #000;
+}
+
+.upload-form-description:focus:invalid {
+  border-color: red;
 }
 
 /* Кнопка отправки */

@@ -55,5 +55,5 @@
     photoOverlayClose.addEventListener('click', onCloseButtonClick);
     photoOverlayClose.addEventListener('keydown', onCloseButtonKeydown);
     document.addEventListener('keydown', onPhotoOverlayEsc);
-  }
+  };
 })();

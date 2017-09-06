@@ -44,10 +44,10 @@
     target.querySelector('.comments-count').textContent = photo.comments.length;
   }
 
-  window.openPhoto = function (photos, item) {
-    openedPhoto = item;
+  window.openPhoto = function (photo, i) {
+    openedPhoto = i;
 
-    fillPhoto(photos[item], photoOverlay);
+    fillPhoto(photo, photoOverlay);
 
     photoOverlay.classList.remove('hidden');
     photoOverlay.focus();

@@ -16,16 +16,16 @@
     return photo;
   }
 
-  function addPhotoOpenHandlers(elem, i, photos) {
+  function addPhotoOpenHandlers(elem, i, photo) {
     elem.addEventListener('click', function (evt) {
       evt.preventDefault();
-      window.openPhoto(photos, i);
+      window.openPhoto(photo, i);
     });
 
     elem.addEventListener('keydown', function (evt) {
       if (window.util.isActivationEvent(evt)) {
         evt.preventDefault();
-        window.openPhoto(photos, i);
+        window.openPhoto(photo, i);
       }
     });
   }
@@ -36,9 +36,10 @@
     var count = photos.length;
 
     for (var i = 0; i < count; i++) {
-      var photoElem = getPhotoElement(photos[i]);
-      addPhotoOpenHandlers(photoElem, i, photos);
-      fragment.appendChild(photoElem);
+      var photo = photos[i];
+      var elem = getPhotoElement(photo);
+      addPhotoOpenHandlers(elem, i, photo);
+      fragment.appendChild(elem);
     }
 
     photosListElement.appendChild(fragment);

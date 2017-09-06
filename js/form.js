@@ -36,7 +36,7 @@
     document.removeEventListener('keydown', onUploadOverlayEsc);
   }
 
-  function toggleResizeBtnState(newSize) {
+  function updateResizeBtnState(newSize) {
     if (uploadResizeDec.hasAttribute('disabled') && newSize >= ResizeOption.MIN) {
       uploadResizeDec.removeAttribute('disabled');
     }
@@ -55,7 +55,7 @@
     if (newSize <= ResizeOption.MAX && newSize >= ResizeOption.MIN) {
       uploadResizeValue.setAttribute('value', newSize + '%');
       uploadImagePreview.setAttribute('style', 'transform: scale(' + newSize / 100 + ')');
-      toggleResizeBtnState(newSize);
+      updateResizeBtnState(newSize);
     }
   }
 
@@ -76,7 +76,7 @@
   }
 
   function onUploadOverlayEsc(evt) {
-    if (evt.keyCode === window.util.KeyCode.ESC && evt.target !== uploadComment) {
+    if (window.util.isEscEvent(evt) && evt.target !== uploadComment) {
       closeUploadOverlay(evt);
       uploadForm.reset();
     }
@@ -109,7 +109,7 @@
   }
 
   function initResize() {
-    toggleResizeBtnState(parseInt(uploadResizeValue.getAttribute('value'), 10));
+    updateResizeBtnState(parseInt(uploadResizeValue.getAttribute('value'), 10));
     uploadResizeInc.addEventListener('click', onResizeIncClick);
     uploadResizeDec.addEventListener('click', onResizeDecClick);
   }

@@ -19,7 +19,7 @@
   }
 
   function onPhotoOverlayEsc(evt) {
-    if (evt.keyCode === window.util.KeyCode.ESC) {
+    if (window.util.isEscEvent(evt)) {
       evt.preventDefault();
       closePhoto(evt);
     }
@@ -33,7 +33,7 @@
 
     photoOverlayClose.removeEventListener('click', onCloseButtonClick);
     photoOverlayClose.removeEventListener('keydown', onCloseButtonKeydown);
-    document.removeEventListener('keycode', onPhotoOverlayEsc);
+    document.removeEventListener('keydown', onPhotoOverlayEsc);
 
     openedPhoto = null;
   }
@@ -44,7 +44,7 @@
     target.querySelector('.comments-count').textContent = photo.comments.length;
   }
 
-  function openPhoto(photos, item) {
+  window.openPhoto = function (photos, item) {
     openedPhoto = item;
 
     fillPhoto(photos[item], photoOverlay);
@@ -56,20 +56,4 @@
     photoOverlayClose.addEventListener('keydown', onCloseButtonKeydown);
     document.addEventListener('keydown', onPhotoOverlayEsc);
   }
-
-  window.preview = {
-    addPhotoOpenHandlers: function (elem, i, photos) {
-      elem.addEventListener('click', function (evt) {
-        evt.preventDefault();
-        openPhoto(photos, i);
-      });
-
-      elem.addEventListener('keydown', function (evt) {
-        if (window.util.isActivationEvent(evt)) {
-          evt.preventDefault();
-          openPhoto(photos, i);
-        }
-      });
-    }
-  };
 })();

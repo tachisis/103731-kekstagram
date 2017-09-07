@@ -4,7 +4,7 @@
   var photoOverlay = document.querySelector('.gallery-overlay');
   var photoOverlayClose = photoOverlay.querySelector('.gallery-overlay-close');
 
-  var openedPhoto = null;
+  var onPreviewClose = null;
 
   function onCloseButtonKeydown(evt) {
     if (window.util.isActivationEvent(evt)) {
@@ -28,26 +28,23 @@
   function closePhoto() {
     photoOverlay.classList.add('hidden');
 
-    var pictures = document.querySelectorAll('.picture');
-    pictures[openedPhoto].focus();
-
     photoOverlayClose.removeEventListener('click', onCloseButtonClick);
     photoOverlayClose.removeEventListener('keydown', onCloseButtonKeydown);
     document.removeEventListener('keydown', onPhotoOverlayEsc);
 
-    openedPhoto = null;
+    if (typeof onPreviewClose === 'function') {
+      onPreviewClose();
+    }
   }
 
-  function fillPhoto(photo, target) {
-    target.querySelector('.gallery-overlay-image').src = photo.url;
-    target.querySelector('.likes-count').textContent = photo.likes;
-    target.querySelector('.comments-count').textContent = photo.comments.length;
+  function fillPhoto(photo) {
+    photoOverlay.querySelector('.gallery-overlay-image').src = photo.url;
+    photoOverlay.querySelector('.likes-count').textContent = photo.likes;
+    photoOverlay.querySelector('.comments-count').textContent = photo.comments.length;
   }
 
-  window.openPhoto = function (photo, i) {
-    openedPhoto = i;
-
-    fillPhoto(photo, photoOverlay);
+  window.openPhoto = function (photo, onClose) {
+    fillPhoto(photo);
 
     photoOverlay.classList.remove('hidden');
     photoOverlay.focus();
@@ -55,5 +52,7 @@
     photoOverlayClose.addEventListener('click', onCloseButtonClick);
     photoOverlayClose.addEventListener('keydown', onCloseButtonKeydown);
     document.addEventListener('keydown', onPhotoOverlayEsc);
+
+    onPreviewClose = onClose;
   };
 })();

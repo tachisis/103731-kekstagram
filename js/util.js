@@ -11,11 +11,13 @@
     getRandom: function (min, max) {
       return Math.random() * (max - min) + min;
     },
+
     swapArrayItems: function (array, current, random) {
       var tmp = array[current];
       array[current] = array[random];
       array[random] = tmp;
     },
+
     shuffle: function (array) {
       var current = array.length;
 
@@ -26,9 +28,11 @@
 
       return array;
     },
+
     isActivationEvent: function (evt) {
       return evt.keyCode === KeyCode.ENTER || evt.keyCode === KeyCode.SPACE;
     },
+
     isEscEvent: function (evt) {
       return evt.keyCode === KeyCode.ESC;
     }

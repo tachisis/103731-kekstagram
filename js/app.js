@@ -16,16 +16,20 @@
     return photo;
   }
 
-  function addPhotoOpenHandlers(elem, i, photo) {
+  function addPhotoOpenHandlers(elem, photo) {
     elem.addEventListener('click', function (evt) {
       evt.preventDefault();
-      window.openPhoto(photo, i);
+      window.openPhoto(photo, function () {
+        elem.focus();
+      });
     });
 
     elem.addEventListener('keydown', function (evt) {
       if (window.util.isActivationEvent(evt)) {
         evt.preventDefault();
-        window.openPhoto(photo, i);
+        window.openPhoto(photo, function () {
+          elem.focus();
+        });
       }
     });
   }
@@ -38,7 +42,7 @@
     for (var i = 0; i < count; i++) {
       var photo = photos[i];
       var elem = getPhotoElement(photo);
-      addPhotoOpenHandlers(elem, i, photo);
+      addPhotoOpenHandlers(elem, photo);
       fragment.appendChild(elem);
     }
 

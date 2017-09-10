@@ -83,20 +83,24 @@
   }
 
   function setEffectIntensity(newLeft, effectName, newLevelWidth) {
-    if (effectName === 'chrome') {
-      uploadImagePreview.style = 'filter:grayscale(' + (newLeft / newLevelWidth).toFixed(1) + ')';
-    }
-    if (effectName === 'sepia') {
-      uploadImagePreview.style = 'filter:sepia(' + (newLeft / newLevelWidth).toFixed(1) + ')';
-    }
-    if (effectName === 'marvin') {
-      uploadImagePreview.style = 'filter:invert(' + Math.ceil(newLeft * 100 / newLevelWidth) + '%)';
-    }
-    if (effectName === 'phobos') {
-      uploadImagePreview.style = 'filter:blur(' + Math.ceil(Math.ceil(newLeft * 100 / newLevelWidth) * InitialEffect.PHOBOS / 100) + 'px)';
-    }
-    if (effectName === 'heat') {
-      uploadImagePreview.style = 'filter:brightness(' + Math.ceil(Math.ceil(newLeft * 100 / newLevelWidth) * InitialEffect.HEAT / 100) + ')';
+    switch (effectName) {
+      case 'chrome':
+        uploadImagePreview.style = 'filter:grayscale(' + (newLeft / newLevelWidth).toFixed(1) + ')';
+        break;
+      case 'sepia':
+        uploadImagePreview.style = 'filter:sepia(' + (newLeft / newLevelWidth).toFixed(1) + ')';
+        break;
+      case 'marvin':
+        uploadImagePreview.style = 'filter:invert(' + Math.ceil(newLeft * 100 / newLevelWidth) + '%)';
+        break;
+      case 'phobos':
+        uploadImagePreview.style = 'filter:blur(' + Math.ceil(Math.ceil(newLeft * 100 / newLevelWidth) * InitialEffect.PHOBOS / 100) + 'px)';
+        break;
+      case 'heat':
+        uploadImagePreview.style = 'filter:brightness(' + Math.ceil(Math.ceil(newLeft * 100 / newLevelWidth) * InitialEffect.HEAT / 100) + ')';
+        break;
+      default:
+        uploadImagePreview.removeAttribute('style');
     }
   }
 

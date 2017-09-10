@@ -116,27 +116,6 @@
     }
   }
 
-  // function onMouseMove(moveEvt, getEffectName) {
-  //   moveEvt.preventDefault();
-  //
-  //   var shift = startLeft - moveEvt.clientX;
-  //   startLeft = moveEvt.clientX;
-  //
-  //   var newLeft = uploadEffectLevelPin.offsetLeft - shift;
-  //
-  //   newLeft = newLeft < 0 ? 0 : newLeft;
-  //   newLeft = newLeft > effectLevelWidth ? effectLevelWidth : newLeft;
-  //
-  //   setEffectLevel(newLeft);
-  // }
-  //
-  // function onMouseUp(upEvt) {
-  //   upEvt.preventDefault();
-  //
-  //   document.removeEventListener('mousemove', onMouseMove);
-  //   document.removeEventListener('mouseup', onMouseUp);
-  // }
-
   function onUploadCancelClick(evt) {
     closeUploadOverlay(evt);
   }
@@ -215,20 +194,6 @@
     });
   }
 
-  // function setSlider(evt) {
-  //   evt.preventDefault();
-  //
-  //   startLeft = evt.clientX;
-  //   effectLevelWidth = uploadEffectLevel.querySelector('.upload-effect-level-line').offsetWidth;
-  //
-  //   document.addEventListener('mousemove', onMouseMove);
-  //   document.addEventListener('mouseup', onMouseUp);
-  // }
-
-  // function initSlider() {
-  //   uploadEffectLevelPin.addEventListener('mousedown', setSlider);
-  // }
-
   function onUploadPhoto(evt) {
     showEditForm();
     initUploadClose();
@@ -238,7 +203,6 @@
 
     window.initEffects(effectCtrls, changeEffect);
     window.initSlider(effectCtrls, setEffectLevel);
-    // initSlider();
 
     initValidation();
   }

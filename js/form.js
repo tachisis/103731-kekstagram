@@ -205,8 +205,8 @@
     updateResizeBtnState(parseInt(uploadResizeValue.getAttribute('value'), 10));
     window.initScale(scaleElem, setNewSize);
 
-    window.initEffects(effectCtrls, changeEffect);
-    window.initSlider(effectCtrls, setEffectLevel);
+    window.initEffects.onClick(effectCtrls, changeEffect);
+    window.initEffects.initSlider(effectCtrls, setEffectLevel);
 
     initValidation();
   }

@@ -7,10 +7,11 @@
   var uploadOverlay = uploadForm.querySelector('.upload-overlay');
   var uploadCancel = uploadForm.querySelector('.upload-form-cancel');
   var uploadComment = uploadForm.querySelector('.upload-form-description');
+  var scaleElem = uploadForm.querySelector('.upload-resize-controls');
   var uploadResizeValue = uploadForm.querySelector('.upload-resize-controls-value');
   var uploadResizeInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
   var uploadResizeDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
-  var uploadEffects = uploadForm.querySelector('.upload-effect-controls');
+  var effectCtrls = uploadForm.querySelector('.upload-effect-controls');
   var uploadImagePreview = uploadForm.querySelector('.effect-image-preview');
   var uploadHashtags = uploadForm.querySelector('.upload-form-hashtags');
   var uploadEffectLevel = uploadForm.querySelector('.upload-effect-level');
@@ -18,6 +19,8 @@
   var uploadEffectLevelVal = uploadEffectLevel.querySelector('.upload-effect-level-val');
 
   var effectClass = null;
+  var effectLevelWidth = null;
+  var newEffectName = null;
 
   var HashtagsOption = {
     AMOUNT: 5,
@@ -70,71 +73,69 @@
     }
   }
 
-  function resizeInc() {
-    var initialSize = parseInt(uploadResizeValue.getAttribute('value'), 10);
-    var newSize = initialSize + ResizeOption.STEP;
-    setNewSize(newSize);
-  }
-
-  function resizeDec() {
-    var initialSize = parseInt(uploadResizeValue.getAttribute('value'), 10);
-    var newSize = initialSize - ResizeOption.STEP;
-    setNewSize(newSize);
-  }
-
-  function setEffectLevel(newLeft) {
+  function setEffectLevel(newLeft, newLevelWidth) {
     uploadEffectLevelPin.style = 'left:' + newLeft + 'px;';
     uploadEffectLevelVal.style = 'width:' + newLeft + 'px;';
+
+    if (typeof newLevelWidth !== 'undefined') {
+      setEffectIntensity(newLeft, newEffectName, newLevelWidth);
+    }
   }
 
-  function setEffectIntensity(newLeft, effectName, effectLevelWidth) {
+  function setEffectIntensity(newLeft, effectName, newLevelWidth) {
     if (effectName === 'chrome') {
-      uploadImagePreview.style = 'filter:grayscale(' + (newLeft / effectLevelWidth).toFixed(1) + ')';
+      uploadImagePreview.style = 'filter:grayscale(' + (newLeft / newLevelWidth).toFixed(1) + ')';
     }
     if (effectName === 'sepia') {
-      uploadImagePreview.style = 'filter:sepia(' + (newLeft / effectLevelWidth).toFixed(1) + ')';
+      uploadImagePreview.style = 'filter:sepia(' + (newLeft / newLevelWidth).toFixed(1) + ')';
     }
     if (effectName === 'marvin') {
-      uploadImagePreview.style = 'filter:invert(' + Math.ceil(newLeft * 100 / effectLevelWidth) + '%)';
+      uploadImagePreview.style = 'filter:invert(' + Math.ceil(newLeft * 100 / newLevelWidth) + '%)';
     }
     if (effectName === 'phobos') {
-      uploadImagePreview.style = 'filter:blur(' + Math.ceil(Math.ceil(newLeft * 100 / effectLevelWidth) * InitialEffect.PHOBOS / 100) + 'px)';
+      uploadImagePreview.style = 'filter:blur(' + Math.ceil(Math.ceil(newLeft * 100 / newLevelWidth) * InitialEffect.PHOBOS / 100) + 'px)';
     }
     if (effectName === 'heat') {
-      uploadImagePreview.style = 'filter:brightness(' + Math.ceil(Math.ceil(newLeft * 100 / effectLevelWidth) * InitialEffect.HEAT / 100) + ')';
+      uploadImagePreview.style = 'filter:brightness(' + Math.ceil(Math.ceil(newLeft * 100 / newLevelWidth) * InitialEffect.HEAT / 100) + ')';
     }
   }
 
-  function updateEffectLevel(evt, effectName, effectLevelWidth) {
-    evt.preventDefault();
+  function changeEffect(effectName) {
+    newEffectName = effectName;
 
-    var startLeft = evt.clientX;
+    uploadImagePreview.classList.remove(effectClass);
+    effectClass = 'effect-' + effectName;
+    uploadImagePreview.classList.add(effectClass);
+    uploadImagePreview.removeAttribute('style');
 
-    function onMouseMove(moveEvt) {
-      evt.preventDefault();
-
-      var shift = startLeft - moveEvt.clientX;
-      startLeft = moveEvt.clientX;
-
-      var newLeft = uploadEffectLevelPin.offsetLeft - shift;
-
-      newLeft = newLeft < 0 ? 0 : newLeft;
-      newLeft = newLeft > effectLevelWidth ? effectLevelWidth : newLeft;
-
-      setEffectLevel(newLeft);
-      setEffectIntensity(newLeft, effectName, effectLevelWidth);
+    if (effectName !== 'none') {
+      uploadEffectLevel.classList.remove('hidden');
+      setEffectLevel(effectLevelWidth);
+    } else {
+      uploadEffectLevel.classList.add('hidden');
     }
-
-    function onMouseUp(upEvt) {
-      upEvt.preventDefault();
-
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    }
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
   }
+
+  // function onMouseMove(moveEvt, getEffectName) {
+  //   moveEvt.preventDefault();
+  //
+  //   var shift = startLeft - moveEvt.clientX;
+  //   startLeft = moveEvt.clientX;
+  //
+  //   var newLeft = uploadEffectLevelPin.offsetLeft - shift;
+  //
+  //   newLeft = newLeft < 0 ? 0 : newLeft;
+  //   newLeft = newLeft > effectLevelWidth ? effectLevelWidth : newLeft;
+  //
+  //   setEffectLevel(newLeft);
+  // }
+  //
+  // function onMouseUp(upEvt) {
+  //   upEvt.preventDefault();
+  //
+  //   document.removeEventListener('mousemove', onMouseMove);
+  //   document.removeEventListener('mouseup', onMouseUp);
+  // }
 
   function onUploadCancelClick(evt) {
     closeUploadOverlay(evt);
@@ -147,38 +148,6 @@
     }
   }
 
-  function onResizeIncClick(evt) {
-    resizeInc();
-  }
-
-  function onResizeDecClick(evt) {
-    resizeDec();
-  }
-
-  function onEffectsClick(evt) {
-    if (evt.target.tagName === 'INPUT') {
-      uploadImagePreview.classList.remove(effectClass);
-      effectClass = 'effect-' + evt.target.value;
-      uploadImagePreview.classList.add(effectClass);
-      uploadImagePreview.removeAttribute('style');
-
-      var effectName = evt.target.value;
-
-      if (effectName !== 'none') {
-        uploadEffectLevel.classList.remove('hidden');
-
-        var effectLevelWidth = uploadEffectLevel.querySelector('.upload-effect-level-line').offsetWidth;
-        setEffectLevel(effectLevelWidth);
-
-        uploadEffectLevelPin.addEventListener('mousedown', function (mdEvt) {
-          updateEffectLevel(mdEvt, effectName, effectLevelWidth);
-        });
-      } else {
-        uploadEffectLevel.classList.add('hidden');
-      }
-    }
-  }
-
   function showEditForm() {
     uploadImage.classList.toggle('hidden');
     uploadOverlay.classList.toggle('hidden');
@@ -187,16 +156,6 @@
   function initUploadClose() {
     document.addEventListener('keydown', onUploadOverlayEsc);
     uploadCancel.addEventListener('click', onUploadCancelClick);
-  }
-
-  function initResize() {
-    updateResizeBtnState(parseInt(uploadResizeValue.getAttribute('value'), 10));
-    uploadResizeInc.addEventListener('click', onResizeIncClick);
-    uploadResizeDec.addEventListener('click', onResizeDecClick);
-  }
-
-  function initEffects() {
-    uploadEffects.addEventListener('click', onEffectsClick);
   }
 
   function initValidation() {
@@ -256,11 +215,31 @@
     });
   }
 
+  // function setSlider(evt) {
+  //   evt.preventDefault();
+  //
+  //   startLeft = evt.clientX;
+  //   effectLevelWidth = uploadEffectLevel.querySelector('.upload-effect-level-line').offsetWidth;
+  //
+  //   document.addEventListener('mousemove', onMouseMove);
+  //   document.addEventListener('mouseup', onMouseUp);
+  // }
+
+  // function initSlider() {
+  //   uploadEffectLevelPin.addEventListener('mousedown', setSlider);
+  // }
+
   function onUploadPhoto(evt) {
     showEditForm();
     initUploadClose();
-    initResize();
-    initEffects();
+
+    updateResizeBtnState(parseInt(uploadResizeValue.getAttribute('value'), 10));
+    window.initScale(scaleElem, setNewSize);
+
+    window.initEffects(effectCtrls, changeEffect);
+    window.initSlider(effectCtrls, setEffectLevel);
+    // initSlider();
+
     initValidation();
   }
 

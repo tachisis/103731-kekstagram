@@ -35,13 +35,13 @@
     MAX: 100
   };
 
-  var InitialEffect = {
-    CHROME: 1,
-    SEPIA: 1,
-    MARVIN: 100,
-    PHOBOS: 3,
-    HEAT: 3
-  };
+  // var InitialEffect = {
+  //   CHROME: 1,
+  //   SEPIA: 1,
+  //   MARVIN: 100,
+  //   PHOBOS: 3,
+  //   HEAT: 3
+  // };
 
   function closeUploadOverlay() {
     uploadOverlay.classList.toggle('hidden');
@@ -57,36 +57,36 @@
     }
   }
 
-  function setEffectLevel(newLeft, newLevelWidth) {
-    uploadEffectLevelPin.style = 'left:' + newLeft + 'px;';
-    uploadEffectLevelVal.style = 'width:' + newLeft + 'px;';
-
-    if (typeof newLevelWidth !== 'undefined') {
-      setEffectIntensity(newLeft, newEffectName, newLevelWidth);
-    }
-  }
-
-  function setEffectIntensity(newLeft, effectName, newLevelWidth) {
-    switch (effectName) {
-      case 'chrome':
-        uploadImagePreview.style = 'filter:grayscale(' + (newLeft / newLevelWidth).toFixed(1) + ')';
-        break;
-      case 'sepia':
-        uploadImagePreview.style = 'filter:sepia(' + (newLeft / newLevelWidth).toFixed(1) + ')';
-        break;
-      case 'marvin':
-        uploadImagePreview.style = 'filter:invert(' + Math.ceil(newLeft * 100 / newLevelWidth) + '%)';
-        break;
-      case 'phobos':
-        uploadImagePreview.style = 'filter:blur(' + Math.ceil(Math.ceil(newLeft * 100 / newLevelWidth) * InitialEffect.PHOBOS / 100) + 'px)';
-        break;
-      case 'heat':
-        uploadImagePreview.style = 'filter:brightness(' + Math.ceil(Math.ceil(newLeft * 100 / newLevelWidth) * InitialEffect.HEAT / 100) + ')';
-        break;
-      default:
-        uploadImagePreview.removeAttribute('style');
-    }
-  }
+  // function setEffectLevel(newLeft, newLevelWidth) {
+  //   uploadEffectLevelPin.style = 'left:' + newLeft + 'px;';
+  //   uploadEffectLevelVal.style = 'width:' + newLeft + 'px;';
+  //
+  //   if (typeof newLevelWidth !== 'undefined') {
+  //     setEffectIntensity(newLeft, newEffectName, newLevelWidth);
+  //   }
+  // }
+  //
+  // function setEffectIntensity(newLeft, effectName, newLevelWidth) {
+  //   switch (effectName) {
+  //     case 'chrome':
+  //       uploadImagePreview.style = 'filter:grayscale(' + (newLeft / newLevelWidth).toFixed(1) + ')';
+  //       break;
+  //     case 'sepia':
+  //       uploadImagePreview.style = 'filter:sepia(' + (newLeft / newLevelWidth).toFixed(1) + ')';
+  //       break;
+  //     case 'marvin':
+  //       uploadImagePreview.style = 'filter:invert(' + Math.ceil(newLeft * 100 / newLevelWidth) + '%)';
+  //       break;
+  //     case 'phobos':
+  //       uploadImagePreview.style = 'filter:blur(' + Math.ceil(Math.ceil(newLeft * 100 / newLevelWidth) * InitialEffect.PHOBOS / 100) + 'px)';
+  //       break;
+  //     case 'heat':
+  //       uploadImagePreview.style = 'filter:brightness(' + Math.ceil(Math.ceil(newLeft * 100 / newLevelWidth) * InitialEffect.HEAT / 100) + ')';
+  //       break;
+  //     default:
+  //       uploadImagePreview.removeAttribute('style');
+  //   }
+  // }
 
   function changeEffect(effectName) {
     newEffectName = effectName;
@@ -98,7 +98,7 @@
 
     if (effectName !== 'none') {
       uploadEffectLevel.classList.remove('hidden');
-      setEffectLevel(effectLevelWidth);
+      // setEffectLevel(effectLevelWidth);
     } else {
       uploadEffectLevel.classList.add('hidden');
     }
@@ -188,9 +188,7 @@
 
     window.initScale(scaleElem, setNewSize);
 
-    window.initEffects.onClick(effectCtrls, changeEffect);
-    window.initEffects.initSlider(effectCtrls, setEffectLevel);
-    // для допиливания модулей
+    window.initEffects(effectCtrls, changeEffect);
 
     initValidation();
   }

@@ -50,26 +50,10 @@
     document.removeEventListener('keydown', onUploadOverlayEsc);
   }
 
-  function updateResizeBtnState(newSize) {
-    if (uploadResizeDec.hasAttribute('disabled') && newSize >= ResizeOption.MIN) {
-      uploadResizeDec.removeAttribute('disabled');
-    }
-    if (uploadResizeInc.hasAttribute('disabled') && newSize <= ResizeOption.MAX) {
-      uploadResizeInc.removeAttribute('disabled');
-    }
-    if (newSize === ResizeOption.MAX) {
-      uploadResizeInc.setAttribute('disabled', 'disabled');
-    }
-    if (newSize === ResizeOption.MIN) {
-      uploadResizeDec.setAttribute('disabled', 'disabled');
-    }
-  }
-
   function setNewSize(newSize) {
     if (newSize <= ResizeOption.MAX && newSize >= ResizeOption.MIN) {
       uploadResizeValue.setAttribute('value', newSize + '%');
       uploadImagePreview.setAttribute('style', 'transform: scale(' + newSize / 100 + ')');
-      updateResizeBtnState(newSize);
     }
   }
 
@@ -121,12 +105,12 @@
   }
 
   function onUploadCancelClick(evt) {
-    closeUploadOverlay(evt);
+    closeUploadOverlay();
   }
 
   function onUploadOverlayEsc(evt) {
     if (window.util.isEscEvent(evt) && evt.target !== uploadComment) {
-      closeUploadOverlay(evt);
+      closeUploadOverlay();
       uploadForm.reset();
     }
   }
@@ -202,7 +186,6 @@
     showEditForm();
     initUploadClose();
 
-    updateResizeBtnState(parseInt(uploadResizeValue.getAttribute('value'), 10));
     window.initScale(scaleElem, setNewSize);
 
     window.initEffects.onClick(effectCtrls, changeEffect);

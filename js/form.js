@@ -207,6 +207,7 @@
 
     window.initEffects.onClick(effectCtrls, changeEffect);
     window.initEffects.initSlider(effectCtrls, setEffectLevel);
+    // для допиливания модулей
 
     initValidation();
   }

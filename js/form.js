@@ -193,18 +193,12 @@
     initValidation();
   }
 
-  // вынести в utils
   function onError(message) {
-    console.error(message);
-    // вывести сообщение об ошибке
+    window.infoMessage(message, 'error');
   };
 
-  // переделать на onSuccess, вынести в utils
   function onUpload(data) {
-    console.log(data);
-    window.infoMessage('Данные загружены успешно', '_success');
-
-    // вывести сообщение об успешной загрузке
+    window.infoMessage('Данные загружены успешно', 'success');
     closeUploadOverlay();
     uploadForm.reset();
   };

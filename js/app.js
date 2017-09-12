@@ -51,9 +51,8 @@
     photosListElement.appendChild(fragment);
   }
 
-  // вынести в utils
   function onError(message) {
-    console.error(message);
+    window.infoMessage(message, 'error');
   };
 
   function onLoad(data) {

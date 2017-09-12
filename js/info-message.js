@@ -3,19 +3,17 @@
 (function () {
   function destroyMessage() {
     var messageContainer = document.querySelector('body').querySelector('.info-message');
-    console.log(messageContainer);
+    document.body.removeChild(messageContainer);
   }
-
-  setTimeout(destroyMessage, 1000);
 
   function createMessageContainer(message, type) {
     var messageContainer = document.createElement('div');
     messageContainer.classList.add('info-message');
-    messageContainer.classList.add(type);
+    messageContainer.classList.add('_' + type);
     messageContainer.textContent = message;
-    document.querySelector('body').appendChild(messageContainer);
+    document.body.appendChild(messageContainer);
 
-    destroyMessage();
+    setTimeout(destroyMessage, 4000);
   }
 
   window.infoMessage = function (message, type) {

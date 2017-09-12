@@ -193,5 +193,27 @@
     initValidation();
   }
 
+  // вынести в utils
+  function onError(message) {
+    console.error(message);
+    // вывести сообщение об ошибке
+  };
+
+  // переделать на onSuccess, вынести в utils
+  function onUpload(data) {
+    console.log(data);
+    window.infoMessage('Данные загружены успешно', '_success');
+
+    // вывести сообщение об успешной загрузке
+    closeUploadOverlay();
+    uploadForm.reset();
+  };
+
   uploadFile.addEventListener('change', onUploadPhoto);
+
+  uploadForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+
+    window.backend.save(new FormData(uploadForm), onUpload, onError);
+  });
 })();

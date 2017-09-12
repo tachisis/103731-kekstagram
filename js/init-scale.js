@@ -27,20 +27,24 @@
     }
   }
 
-  function resizeInc(uploadResizeValue, setNewSize) {
+  function resizeInc(setNewSize) {
     var initialSize = parseInt(uploadResizeValue.getAttribute('value'), 10);
     var newSize = initialSize + ResizeOption.STEP;
     if (typeof setNewSize === 'function') {
-      setNewSize(newSize);
+      if (newSize <= ResizeOption.MAX && newSize >= ResizeOption.MIN) {
+        setNewSize(newSize);
+      }
       updateResizeBtnState(newSize);
     }
   }
 
-  function resizeDec(uploadResizeValue, setNewSize) {
+  function resizeDec(setNewSize) {
     var initialSize = parseInt(uploadResizeValue.getAttribute('value'), 10);
     var newSize = initialSize - ResizeOption.STEP;
     if (typeof setNewSize === 'function') {
-      setNewSize(newSize);
+      if (newSize <= ResizeOption.MAX && newSize >= ResizeOption.MIN) {
+        setNewSize(newSize);
+      }
       updateResizeBtnState(newSize);
     }
   }
@@ -53,10 +57,10 @@
     updateResizeBtnState(parseInt(uploadResizeValue.getAttribute('value'), 10));
 
     uploadResizeInc.addEventListener('click', function (evt) {
-      resizeInc(uploadResizeValue, setNewSize);
+      resizeInc(setNewSize);
     });
     uploadResizeDec.addEventListener('click', function (evt) {
-      resizeDec(uploadResizeValue, setNewSize);
+      resizeDec(setNewSize);
     });
   };
 })();

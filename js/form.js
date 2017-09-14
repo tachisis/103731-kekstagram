@@ -154,5 +154,21 @@
     initValidation();
   }
 
+  function onError(message) {
+    window.infoMessage(message, 'error');
+  };
+
+  function onUpload(data) {
+    window.infoMessage('Данные загружены успешно', 'success');
+    closeUploadOverlay();
+    uploadForm.reset();
+  };
+
   uploadFile.addEventListener('change', onUploadPhoto);
+
+  uploadForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+
+    window.backend.save(new FormData(uploadForm), onUpload, onError);
+  });
 })();

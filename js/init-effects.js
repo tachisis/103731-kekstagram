@@ -1,31 +1,37 @@
 'use strict';
 
 (function () {
-  var changeEffect = null;
+  var DEFAULT_LEVEL = 100;
   var currentLevel = null;
   var currentEffect = 'none';
 
-  function onEffectsClick(evt, effectCtrls, onChange) {
-    if (evt.target.tagName === 'INPUT') {
-      var effectName = evt.target.value;
+  function onEffectsClick(effectName, effectCtrls, changeEffect) {
+    currentEffect = effectName;
+    currentLevel = DEFAULT_LEVEL;
+    window.slider.clear(effectCtrls);
 
-      if (typeof onChange === 'function') {
-        currentEffect = effectName;
-        currentLevel = 100;
-        window.initSlider.clear(effectCtrls);
-        onChange(currentEffect, currentLevel);
-      }
+    var uploadEffectLevel = effectCtrls.querySelector('.upload-effect-level');
+
+    if (effectName !== 'none') {
+      uploadEffectLevel.classList.remove('hidden');
+    } else {
+      uploadEffectLevel.classList.add('hidden');
+    }
+
+    if (typeof changeEffect === 'function') {
+      changeEffect(currentEffect, currentLevel);
     }
   }
 
-  window.initEffects = function (effectCtrls, callback) {
-    changeEffect = callback;
-
+  window.initEffects = function (effectCtrls, changeEffect) {
     effectCtrls.addEventListener('click', function (evt) {
-      onEffectsClick(evt, effectCtrls, changeEffect);
+      if (evt.target.tagName === 'INPUT') {
+        var effectName = evt.target.value;
+        onEffectsClick(effectName, effectCtrls, changeEffect);
+      }
     });
 
-    window.initSlider.init(effectCtrls, function (newLevel) {
+    window.slider.init(effectCtrls, function (newLevel) {
       currentLevel = newLevel;
       if (typeof changeEffect === 'function') {
         changeEffect(currentEffect, currentLevel);

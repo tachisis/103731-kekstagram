@@ -12,8 +12,6 @@
   var effectCtrls = uploadForm.querySelector('.upload-effect-controls');
   var uploadImagePreview = uploadForm.querySelector('.effect-image-preview');
   var uploadHashtags = uploadForm.querySelector('.upload-form-hashtags');
-  var uploadEffectLevel = uploadForm.querySelector('.upload-effect-level');
-  var uploadEffectLevelInput = uploadEffectLevel.querySelector('#effect-level');
 
   var HashtagsOption = {
     AMOUNT: 5,
@@ -64,13 +62,7 @@
   }
 
   function changeEffect(effectName, intensity) {
-    if (effectName !== 'none') {
-      uploadEffectLevel.classList.remove('hidden');
-    } else {
-      uploadEffectLevel.classList.add('hidden');
-    }
     setEffectIntensity(effectName, intensity);
-    uploadEffectLevelInput.value = intensity + '%';
   }
 
   function onUploadCancelClick(evt) {

@@ -2,7 +2,7 @@
 
 (function () {
   function destroyMessage() {
-    var messageContainer = document.querySelector('body').querySelector('.info-message');
+    var messageContainer = document.querySelector('.info-message');
     document.body.removeChild(messageContainer);
   }
 

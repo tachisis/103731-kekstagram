@@ -49,13 +49,12 @@
     photosListElement.appendChild(fragment);
   }
 
-  function onError(message) {
-    window.showMessage(message, 'error');
-  }
-
-  function onLoad(data) {
-    renderPhotos(data, '.pictures');
-  }
-
-  window.backend.load(onLoad, onError);
+  window.backend.load(
+      function (data) {
+        renderPhotos(data, '.pictures');
+      },
+      function (message) {
+        window.showMessage(message, 'error');
+      }
+  );
 })();

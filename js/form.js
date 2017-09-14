@@ -155,4 +155,20 @@
   }
 
   uploadFile.addEventListener('change', onUploadPhoto);
+
+  uploadForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+
+    window.backend.save(
+        new FormData(uploadForm),
+        function (data) {
+          window.showMessage('Данные загружены успешно', 'success');
+          closeUploadOverlay();
+          uploadForm.reset();
+        },
+        function (message) {
+          window.showMessage(message, 'error');
+        }
+    );
+  });
 })();

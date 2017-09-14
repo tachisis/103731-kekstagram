@@ -868,3 +868,32 @@ input[type=radio]:checked + .upload-effect-label .upload-effect-preview {
 .footer-social-item-vk {
   background-position: -84px 0;
 }
+
+
+.info-message {
+  font-size: 20px;
+  font-weight: bold;
+
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  left: 0;
+
+  box-sizing: border-box;
+  width: 100%;
+  padding: 20px 40px;
+
+  text-align: center;
+
+  color: #fff;
+  background-color: gray;
+}
+
+
+.info-message._success {
+  background-color: green;
+}
+
+.info-message._error {
+  background-color: red;
+}

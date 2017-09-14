@@ -49,5 +49,12 @@
     photosListElement.appendChild(fragment);
   }
 
-  renderPhotos(window.getPhotos(25), '.pictures');
+  window.backend.load(
+      function (data) {
+        renderPhotos(data, '.pictures');
+      },
+      function (message) {
+        window.showMessage(message, 'error');
+      }
+  );
 })();

@@ -8,40 +8,59 @@
     MAX: 100
   };
 
-  function resizeInc(uploadResizeValue, setNewSize) {
+  var uploadResizeValue = null;
+  var uploadResizeInc = null;
+  var uploadResizeDec = null;
+
+  function updateResizeBtnState(newSize) {
+    if (uploadResizeDec.hasAttribute('disabled') && newSize >= ResizeOption.MIN) {
+      uploadResizeDec.removeAttribute('disabled');
+    }
+    if (uploadResizeInc.hasAttribute('disabled') && newSize <= ResizeOption.MAX) {
+      uploadResizeInc.removeAttribute('disabled');
+    }
+    if (newSize === ResizeOption.MAX) {
+      uploadResizeInc.setAttribute('disabled', 'disabled');
+    }
+    if (newSize === ResizeOption.MIN) {
+      uploadResizeDec.setAttribute('disabled', 'disabled');
+    }
+  }
+
+  function resizeInc(setNewSize) {
     var initialSize = parseInt(uploadResizeValue.getAttribute('value'), 10);
     var newSize = initialSize + ResizeOption.STEP;
     if (typeof setNewSize === 'function') {
-      setNewSize(newSize);
+      if (newSize <= ResizeOption.MAX && newSize >= ResizeOption.MIN) {
+        setNewSize(newSize);
+      }
+      updateResizeBtnState(newSize);
     }
   }
 
-  function resizeDec(uploadResizeValue, setNewSize) {
+  function resizeDec(setNewSize) {
     var initialSize = parseInt(uploadResizeValue.getAttribute('value'), 10);
     var newSize = initialSize - ResizeOption.STEP;
     if (typeof setNewSize === 'function') {
-      setNewSize(newSize);
+      if (newSize <= ResizeOption.MAX && newSize >= ResizeOption.MIN) {
+        setNewSize(newSize);
+      }
+      updateResizeBtnState(newSize);
     }
   }
 
-  function onResizeIncClick(evt, uploadResizeValue, setNewSize) {
-    resizeInc(uploadResizeValue, setNewSize);
-  }
-
-  function onResizeDecClick(evt, uploadResizeValue, setNewSize) {
-    resizeDec(uploadResizeValue, setNewSize);
-  }
-
   window.initScale = function (scaleElem, setNewSize) {
-    var uploadResizeValue = scaleElem.querySelector('.upload-resize-controls-value');
-    var uploadResizeInc = scaleElem.querySelector('.upload-resize-controls-button-inc');
-    var uploadResizeDec = scaleElem.querySelector('.upload-resize-controls-button-dec');
+    uploadResizeValue = scaleElem.querySelector('.upload-resize-controls-value');
+    uploadResizeInc = scaleElem.querySelector('.upload-resize-controls-button-inc');
+    uploadResizeDec = scaleElem.querySelector('.upload-resize-controls-button-dec');
+
+    updateResizeBtnState(parseInt(uploadResizeValue.getAttribute('value'), 10));
 
     uploadResizeInc.addEventListener('click', function (evt) {
-      onResizeIncClick(evt, uploadResizeValue, setNewSize);
+      resizeInc(setNewSize);
     });
     uploadResizeDec.addEventListener('click', function (evt) {
-      onResizeDecClick(evt, uploadResizeValue, setNewSize);
+      resizeDec(setNewSize);
     });
   };
 })();

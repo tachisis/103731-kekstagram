@@ -9,30 +9,14 @@
   var uploadComment = uploadForm.querySelector('.upload-form-description');
   var scaleElem = uploadForm.querySelector('.upload-resize-controls');
   var uploadResizeValue = uploadForm.querySelector('.upload-resize-controls-value');
-  var uploadResizeInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
-  var uploadResizeDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
   var effectCtrls = uploadForm.querySelector('.upload-effect-controls');
   var uploadImagePreview = uploadForm.querySelector('.effect-image-preview');
   var uploadHashtags = uploadForm.querySelector('.upload-form-hashtags');
-  var uploadEffectLevel = uploadForm.querySelector('.upload-effect-level');
-  var uploadEffectLevelPin = uploadEffectLevel.querySelector('.upload-effect-level-pin');
-  var uploadEffectLevelVal = uploadEffectLevel.querySelector('.upload-effect-level-val');
-
-  var effectClass = null;
-  var effectLevelWidth = null;
-  var newEffectName = null;
 
   var HashtagsOption = {
     AMOUNT: 5,
     LENGTH: 20,
     SYMBOL: '#'
-  };
-
-  var ResizeOption = {
-    DEFAULT: 100,
-    STEP: 25,
-    MIN: 25,
-    MAX: 100
   };
 
   var InitialEffect = {
@@ -50,83 +34,44 @@
     document.removeEventListener('keydown', onUploadOverlayEsc);
   }
 
-  function updateResizeBtnState(newSize) {
-    if (uploadResizeDec.hasAttribute('disabled') && newSize >= ResizeOption.MIN) {
-      uploadResizeDec.removeAttribute('disabled');
-    }
-    if (uploadResizeInc.hasAttribute('disabled') && newSize <= ResizeOption.MAX) {
-      uploadResizeInc.removeAttribute('disabled');
-    }
-    if (newSize === ResizeOption.MAX) {
-      uploadResizeInc.setAttribute('disabled', 'disabled');
-    }
-    if (newSize === ResizeOption.MIN) {
-      uploadResizeDec.setAttribute('disabled', 'disabled');
-    }
-  }
-
   function setNewSize(newSize) {
-    if (newSize <= ResizeOption.MAX && newSize >= ResizeOption.MIN) {
-      uploadResizeValue.setAttribute('value', newSize + '%');
-      uploadImagePreview.setAttribute('style', 'transform: scale(' + newSize / 100 + ')');
-      updateResizeBtnState(newSize);
-    }
+    uploadResizeValue.setAttribute('value', newSize + '%');
+    uploadImagePreview.setAttribute('style', 'transform: scale(' + newSize / 100 + ')');
   }
 
-  function setEffectLevel(newLeft, newLevelWidth) {
-    uploadEffectLevelPin.style = 'left:' + newLeft + 'px;';
-    uploadEffectLevelVal.style = 'width:' + newLeft + 'px;';
-
-    if (typeof newLevelWidth !== 'undefined') {
-      setEffectIntensity(newLeft, newEffectName, newLevelWidth);
-    }
-  }
-
-  function setEffectIntensity(newLeft, effectName, newLevelWidth) {
+  function setEffectIntensity(effectName, intensity) {
     switch (effectName) {
       case 'chrome':
-        uploadImagePreview.style = 'filter:grayscale(' + (newLeft / newLevelWidth).toFixed(1) + ')';
+        uploadImagePreview.style = 'filter:grayscale(' + (intensity / 100).toFixed(1) + ')';
         break;
       case 'sepia':
-        uploadImagePreview.style = 'filter:sepia(' + (newLeft / newLevelWidth).toFixed(1) + ')';
+        uploadImagePreview.style = 'filter:sepia(' + (intensity / 100).toFixed(1) + ')';
         break;
       case 'marvin':
-        uploadImagePreview.style = 'filter:invert(' + Math.ceil(newLeft * 100 / newLevelWidth) + '%)';
+        uploadImagePreview.style = 'filter:invert(' + intensity + '%)';
         break;
       case 'phobos':
-        uploadImagePreview.style = 'filter:blur(' + Math.ceil(Math.ceil(newLeft * 100 / newLevelWidth) * InitialEffect.PHOBOS / 100) + 'px)';
+        uploadImagePreview.style = 'filter:blur(' + Math.ceil(intensity * InitialEffect.PHOBOS / 100) + 'px)';
         break;
       case 'heat':
-        uploadImagePreview.style = 'filter:brightness(' + Math.ceil(Math.ceil(newLeft * 100 / newLevelWidth) * InitialEffect.HEAT / 100) + ')';
+        uploadImagePreview.style = 'filter:brightness(' + Math.ceil(intensity * InitialEffect.HEAT / 100) + ')';
         break;
       default:
         uploadImagePreview.removeAttribute('style');
     }
   }
 
-  function changeEffect(effectName) {
-    newEffectName = effectName;
-
-    uploadImagePreview.classList.remove(effectClass);
-    effectClass = 'effect-' + effectName;
-    uploadImagePreview.classList.add(effectClass);
-    uploadImagePreview.removeAttribute('style');
-
-    if (effectName !== 'none') {
-      uploadEffectLevel.classList.remove('hidden');
-      setEffectLevel(effectLevelWidth);
-    } else {
-      uploadEffectLevel.classList.add('hidden');
-    }
+  function changeEffect(effectName, intensity) {
+    setEffectIntensity(effectName, intensity);
   }
 
   function onUploadCancelClick(evt) {
-    closeUploadOverlay(evt);
+    closeUploadOverlay();
   }
 
   function onUploadOverlayEsc(evt) {
     if (window.util.isEscEvent(evt) && evt.target !== uploadComment) {
-      closeUploadOverlay(evt);
+      closeUploadOverlay();
       uploadForm.reset();
     }
   }
@@ -202,11 +147,9 @@
     showEditForm();
     initUploadClose();
 
-    updateResizeBtnState(parseInt(uploadResizeValue.getAttribute('value'), 10));
     window.initScale(scaleElem, setNewSize);
 
-    window.initEffects.onClick(effectCtrls, changeEffect);
-    window.initEffects.initSlider(effectCtrls, setEffectLevel);
+    window.initEffects(effectCtrls, changeEffect);
 
     initValidation();
   }

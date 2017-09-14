@@ -46,6 +46,12 @@
       }
 
       lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
+    },
+
+    clearNode: function (el) {
+      while (el.firstChild) {
+        el.removeChild(el.firstChild);
+      }
     }
   };
 })();

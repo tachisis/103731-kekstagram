@@ -1,59 +1,46 @@
 'use strict';
 
 (function () {
-  var dataCopy = null;
+  function filter(filterName, data, onFilter) {
+    var sortedData;
 
-  function onFiltersClick(filterName, data, renderPhotos) {
     switch (filterName) {
-      case 'recommend':
-        renderPhotos(data);
-        break;
       case 'popular':
-        dataCopy = data.slice();
-        dataCopy.sort(function (first, second) {
-          if (first.likes < second.likes) {
-            return 1;
-          } else if (first.likes > second.likes) {
-            return -1;
-          } else {
-            return 0;
-          }
+        sortedData = data.slice().sort(function (first, second) {
+          return second.likes - first.likes;
         });
-        renderPhotos(dataCopy);
         break;
       case 'discussed':
-        dataCopy = data.slice();
-        dataCopy.sort(function (first, second) {
-          if (first.comments.length < second.comments.length) {
-            return 1;
-          } else if (first.comments.length > second.comments.length) {
-            return -1;
-          } else {
-            return 0;
-          }
+        sortedData = data.slice().sort(function (first, second) {
+          return second.comments.length - first.comments.length;
         });
-        renderPhotos(dataCopy);
         break;
       case 'random':
-        renderPhotos(window.util.shuffle(data.slice()));
+        sortedData = window.util.shuffle(data.slice());
         break;
       default:
-        renderPhotos(data);
+        sortedData = data;
+    }
+
+    if (typeof onFilter === 'function') {
+      onFilter(sortedData);
     }
   }
 
-  window.initFilters = function (filters, data, renderPhotos) {
+  window.initFilters = function (filters, data, onFilter) {
     filters.classList.remove('hidden');
 
     filters.addEventListener('click', function (evt) {
       if (evt.target.tagName === 'INPUT') {
         var filterName = evt.target.value;
-        onFiltersClick(filterName, data, renderPhotos);
+        filter(filterName, data, onFilter);
       }
     });
 
-    if (typeof renderPhotos === 'function') {
-      renderPhotos(data);
+    var defaultFilter = filters.querySelector('[checked]').value;
+
+    if (typeof onFilter === 'function') {
+      filter(defaultFilter, data, onFilter);
     }
   };
 })();

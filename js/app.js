@@ -37,9 +37,7 @@
 
   function renderPhotos(photos, target) {
     var photosListElement = document.querySelector(target);
-    while (photosListElement.firstChild) {
-      photosListElement.removeChild(photosListElement.firstChild);
-    }
+    window.util.clearNode(photosListElement);
     var fragment = document.createDocumentFragment();
     var count = photos.length;
 

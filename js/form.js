@@ -155,14 +155,14 @@
   }
 
   function onError(message) {
-    window.infoMessage(message, 'error');
-  };
+    window.showMessage(message, 'error');
+  }
 
   function onUpload(data) {
-    window.infoMessage('Данные загружены успешно', 'success');
+    window.showMessage('Данные загружены успешно', 'success');
     closeUploadOverlay();
     uploadForm.reset();
-  };
+  }
 
   uploadFile.addEventListener('change', onUploadPhoto);
 

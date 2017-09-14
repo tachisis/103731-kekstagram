@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var url = 'https://1510.dump.academy/kekstagram/data';
-
   var photoTemplate = document
       .querySelector('#picture-template')
       .content
@@ -52,12 +50,12 @@
   }
 
   function onError(message) {
-    window.infoMessage(message, 'error');
-  };
+    window.showMessage(message, 'error');
+  }
 
   function onLoad(data) {
     renderPhotos(data, '.pictures');
-  };
+  }
 
   window.backend.load(onLoad, onError);
 })();

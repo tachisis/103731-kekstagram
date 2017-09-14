@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var filters = document.querySelector('.filters');
   var photoTemplate = document
       .querySelector('#picture-template')
       .content
@@ -36,6 +37,9 @@
 
   function renderPhotos(photos, target) {
     var photosListElement = document.querySelector(target);
+    while (photosListElement.firstChild) {
+      photosListElement.removeChild(photosListElement.firstChild);
+    }
     var fragment = document.createDocumentFragment();
     var count = photos.length;
 
@@ -51,7 +55,9 @@
 
   window.backend.load(
       function (data) {
-        renderPhotos(data, '.pictures');
+        window.initFilters(filters, data, function (sortedData) {
+          window.util.debounce(renderPhotos(sortedData, '.pictures'));
+        });
       },
       function (message) {
         window.showMessage(message, 'error');

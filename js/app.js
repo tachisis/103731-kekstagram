@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var filters = document.querySelector('.filters');
   var photoTemplate = document
       .querySelector('#picture-template')
       .content
@@ -36,6 +37,7 @@
 
   function renderPhotos(photos, target) {
     var photosListElement = document.querySelector(target);
+    window.util.clearNode(photosListElement);
     var fragment = document.createDocumentFragment();
     var count = photos.length;
 
@@ -51,7 +53,9 @@
 
   window.backend.load(
       function (data) {
-        renderPhotos(data, '.pictures');
+        window.initFilters(filters, data, window.util.debounce(function (sortedData) {
+          renderPhotos(sortedData, '.pictures');
+        }));
       },
       function (message) {
         window.showMessage(message, 'error');

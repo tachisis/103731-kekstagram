@@ -32,12 +32,11 @@
 
     filters.addEventListener('click', function (evt) {
       if (evt.target.tagName === 'INPUT') {
-        var filterName = evt.target.value;
-        filter(filterName, data, onFilter);
+        filter(evt.target.value, data, onFilter);
       }
     });
 
-    var defaultFilter = filters.querySelector('[checked]').value;
+    var defaultFilter = filters.querySelector(':checked').value;
 
     if (typeof onFilter === 'function') {
       filter(defaultFilter, data, onFilter);

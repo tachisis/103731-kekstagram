@@ -41,11 +41,16 @@
     },
 
     debounce: function (fun) {
-      if (lastTimeout) {
-        window.clearTimeout(lastTimeout);
-      }
+      return function () {
+        var args = arguments;
 
-      lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
+        clearTimeout(lastTimeout);
+
+        lastTimeout = setTimeout(function () {
+          lastTimeout = null;
+          fun.apply(null, args);
+        }, DEBOUNCE_INTERVAL);
+      };
     },
 
     clearNode: function (el) {

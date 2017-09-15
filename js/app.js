@@ -53,9 +53,9 @@
 
   window.backend.load(
       function (data) {
-        window.initFilters(filters, data, function (sortedData) {
-          window.util.debounce(renderPhotos(sortedData, '.pictures'));
-        });
+        window.initFilters(filters, data, window.util.debounce(function (sortedData) {
+          renderPhotos(sortedData, '.pictures');
+        }));
       },
       function (message) {
         window.showMessage(message, 'error');

@@ -13,39 +13,29 @@
   var uploadResizeDec = null;
 
   function updateResizeBtnState(newSize) {
-    if (uploadResizeDec.hasAttribute('disabled') && newSize >= ResizeOption.MIN) {
-      uploadResizeDec.removeAttribute('disabled');
-    }
-    if (uploadResizeInc.hasAttribute('disabled') && newSize <= ResizeOption.MAX) {
-      uploadResizeInc.removeAttribute('disabled');
-    }
-    if (newSize === ResizeOption.MAX) {
-      uploadResizeInc.setAttribute('disabled', 'disabled');
-    }
-    if (newSize === ResizeOption.MIN) {
-      uploadResizeDec.setAttribute('disabled', 'disabled');
+    uploadResizeInc.disabled = newSize === ResizeOption.MAX;
+    uploadResizeDec.disabled = newSize === ResizeOption.MIN;
+  }
+
+  function resizeInc(onSizeChange) {
+    var initialSize = parseInt(uploadResizeValue.value, 10);
+    var newSize = window.util.clamp(initialSize + ResizeOption.STEP, ResizeOption.MIN, ResizeOption.MAX);
+
+    updateResizeBtnState(newSize);
+
+    if (typeof onSizeChange === 'function') {
+      onSizeChange(newSize);
     }
   }
 
-  function resizeInc(setNewSize) {
-    var initialSize = parseInt(uploadResizeValue.getAttribute('value'), 10);
-    var newSize = initialSize + ResizeOption.STEP;
-    if (typeof setNewSize === 'function') {
-      if (newSize <= ResizeOption.MAX && newSize >= ResizeOption.MIN) {
-        setNewSize(newSize);
-      }
-      updateResizeBtnState(newSize);
-    }
-  }
-
-  function resizeDec(setNewSize) {
-    var initialSize = parseInt(uploadResizeValue.getAttribute('value'), 10);
+  function resizeDec(onSizeChange) {
+    var initialSize = parseInt(uploadResizeValue.value, 10);
     var newSize = initialSize - ResizeOption.STEP;
-    if (typeof setNewSize === 'function') {
+    updateResizeBtnState(newSize);
+    if (typeof onSizeChange === 'function') {
       if (newSize <= ResizeOption.MAX && newSize >= ResizeOption.MIN) {
-        setNewSize(newSize);
+        onSizeChange(newSize);
       }
-      updateResizeBtnState(newSize);
     }
   }
 
@@ -54,7 +44,7 @@
     uploadResizeInc = scaleElem.querySelector('.upload-resize-controls-button-inc');
     uploadResizeDec = scaleElem.querySelector('.upload-resize-controls-button-dec');
 
-    updateResizeBtnState(parseInt(uploadResizeValue.getAttribute('value'), 10));
+    updateResizeBtnState(parseInt(uploadResizeValue.value, 10));
 
     uploadResizeInc.addEventListener('click', function (evt) {
       resizeInc(setNewSize);

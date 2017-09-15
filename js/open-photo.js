@@ -9,19 +9,19 @@
   function onCloseButtonKeydown(evt) {
     if (window.util.isActivationEvent(evt)) {
       evt.preventDefault();
-      closePhoto(evt);
+      closePhoto();
     }
   }
 
   function onCloseButtonClick(evt) {
     evt.preventDefault();
-    closePhoto(evt);
+    closePhoto();
   }
 
   function onPhotoOverlayEsc(evt) {
     if (window.util.isEscEvent(evt)) {
       evt.preventDefault();
-      closePhoto(evt);
+      closePhoto();
     }
   }
 

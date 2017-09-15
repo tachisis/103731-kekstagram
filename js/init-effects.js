@@ -4,13 +4,14 @@
   var DEFAULT_LEVEL = 100;
   var currentLevel = null;
   var currentEffect = 'none';
+  var uploadForm = document.querySelector('#upload-select-image');
+  var uploadEffectLevel = uploadForm.querySelector('.upload-effect-level');
+  var effectCtrls = uploadForm.querySelector('.upload-effect-controls');
 
-  function onEffectsClick(effectName, effectCtrls, changeEffect) {
+  function changeEffect(effectName, onEffectChange) {
     currentEffect = effectName;
     currentLevel = DEFAULT_LEVEL;
     window.slider.clear(effectCtrls);
-
-    var uploadEffectLevel = effectCtrls.querySelector('.upload-effect-level');
 
     if (effectName !== 'none') {
       uploadEffectLevel.classList.remove('hidden');
@@ -18,23 +19,23 @@
       uploadEffectLevel.classList.add('hidden');
     }
 
-    if (typeof changeEffect === 'function') {
-      changeEffect(currentEffect, currentLevel);
+    if (typeof onEffectChange === 'function') {
+      onEffectChange(currentEffect, currentLevel);
     }
   }
 
-  window.initEffects = function (effectCtrls, changeEffect) {
+  window.initEffects = function (onEffectChange) {
     effectCtrls.addEventListener('click', function (evt) {
       if (evt.target.tagName === 'INPUT') {
         var effectName = evt.target.value;
-        onEffectsClick(effectName, effectCtrls, changeEffect);
+        changeEffect(effectName, onEffectChange);
       }
     });
 
     window.slider.init(effectCtrls, function (newLevel) {
       currentLevel = newLevel;
-      if (typeof changeEffect === 'function') {
-        changeEffect(currentEffect, currentLevel);
+      if (typeof onEffectChange === 'function') {
+        onEffectChange(currentEffect, currentLevel);
       }
     });
   };

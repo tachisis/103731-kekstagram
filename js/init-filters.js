@@ -36,10 +36,6 @@
       }
     });
 
-    var defaultFilter = filters.querySelector(':checked').value;
-
-    if (typeof onFilter === 'function') {
-      filter(defaultFilter, data, onFilter);
-    }
+    filter(filters.querySelector(':checked').value, data, onFilter);
   };
 })();

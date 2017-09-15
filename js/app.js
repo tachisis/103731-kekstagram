@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var DEBOUNCE_INTERVAL = 300;
   var filters = document.querySelector('.filters');
   var photoTemplate = document
       .querySelector('#picture-template')
@@ -39,14 +40,13 @@
     var photosListElement = document.querySelector(target);
     window.util.clearNode(photosListElement);
     var fragment = document.createDocumentFragment();
-    var count = photos.length;
 
-    for (var i = 0; i < count; i++) {
+    photos.forEach(function (item, i, arr) {
       var photo = photos[i];
       var elem = getPhotoElement(photo);
       addPhotoOpenHandlers(elem, photo);
       fragment.appendChild(elem);
-    }
+    });
 
     photosListElement.appendChild(fragment);
   }
@@ -55,7 +55,7 @@
       function (data) {
         window.initFilters(filters, data, window.util.debounce(function (sortedData) {
           renderPhotos(sortedData, '.pictures');
-        }));
+        }, DEBOUNCE_INTERVAL));
       },
       function (message) {
         window.showMessage(message, 'error');

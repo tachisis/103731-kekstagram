@@ -7,7 +7,7 @@
   var uploadEffectLevelVal = null;
   var effectLevelWidth = null;
   var shift = null;
-  var effectLevelpinLeft = null;
+  var effectLevelPinLeft = null;
   var effectLevelLineLeft = null;
   var changeEffect = null;
   var uploadEffectLevelInput = null;
@@ -15,7 +15,7 @@
   function setLevel(newLeft) {
     uploadEffectLevelPin.style = 'left:' + newLeft + '%;';
     uploadEffectLevelVal.style = 'width:' + newLeft + '%;';
-    uploadEffectLevelInput.setAttribute('value', newLeft + '%');
+    uploadEffectLevelInput.value = newLeft + '%';
   }
 
   function onMouseMove(moveEvt) {
@@ -47,8 +47,8 @@
 
     var effectLevelLine = uploadEffectLevel.querySelector('.upload-effect-level-line');
     effectLevelLineLeft = effectLevelLine.getBoundingClientRect().left + pageXOffset;
-    effectLevelpinLeft = uploadEffectLevelPin.getBoundingClientRect().left + pageXOffset;
-    shift = evt.pageX - effectLevelpinLeft;
+    effectLevelPinLeft = uploadEffectLevelPin.getBoundingClientRect().left + pageXOffset;
+    shift = evt.pageX - effectLevelPinLeft - uploadEffectLevelPin.offsetWidth / 2;
 
     effectLevelWidth = effectLevelLine.offsetWidth;
 

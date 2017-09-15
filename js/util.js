@@ -7,9 +7,6 @@
     SPACE: 32
   };
 
-  var DEBOUNCE_INTERVAL = 300;
-  var lastTimeout;
-
   window.util = {
     getRandom: function (min, max) {
       return Math.random() * (max - min) + min;
@@ -40,7 +37,8 @@
       return evt.keyCode === KeyCode.ESC;
     },
 
-    debounce: function (fun) {
+    debounce: function (fun, interval) {
+      var lastTimeout;
       return function () {
         var args = arguments;
 
@@ -49,7 +47,7 @@
         lastTimeout = setTimeout(function () {
           lastTimeout = null;
           fun.apply(null, args);
-        }, DEBOUNCE_INTERVAL);
+        }, interval);
       };
     },
 
@@ -57,6 +55,10 @@
       while (el.firstChild) {
         el.removeChild(el.firstChild);
       }
+    },
+
+    clamp: function (val, min, max) {
+      return Math.min(Math.max(min, val), max);
     }
   };
 })();

@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var DESTROY_TIMEOUT = 4000;
+
   function destroyMessage() {
     var messageContainer = document.querySelector('.info-message');
     document.body.removeChild(messageContainer);
@@ -13,7 +15,7 @@
     messageContainer.textContent = message;
     document.body.appendChild(messageContainer);
 
-    setTimeout(destroyMessage, 4000);
+    setTimeout(destroyMessage, DESTROY_TIMEOUT);
   }
 
   window.showMessage = function (message, type) {

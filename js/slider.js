@@ -48,7 +48,7 @@
     var effectLevelLine = uploadEffectLevel.querySelector('.upload-effect-level-line');
     effectLevelLineLeft = effectLevelLine.getBoundingClientRect().left + pageXOffset;
     effectLevelPinLeft = uploadEffectLevelPin.getBoundingClientRect().left + pageXOffset;
-    shift = evt.pageX - effectLevelPinLeft - uploadEffectLevelPin.offsetWidth / 2;
+    shift = evt.pageX - effectLevelPinLeft;
 
     effectLevelWidth = effectLevelLine.offsetWidth;
 

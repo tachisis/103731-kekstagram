@@ -18,8 +18,7 @@
   }
 
   function resizeInc(onSizeChange) {
-    var initialSize = parseInt(uploadResizeValue.value, 10);
-    var newSize = window.util.clamp(initialSize + ResizeOption.STEP, ResizeOption.MIN, ResizeOption.MAX);
+    var newSize = window.util.clamp(parseInt(uploadResizeValue.value, 10) + ResizeOption.STEP, ResizeOption.MIN, ResizeOption.MAX);
 
     updateResizeBtnState(newSize);
 
@@ -29,13 +28,12 @@
   }
 
   function resizeDec(onSizeChange) {
-    var initialSize = parseInt(uploadResizeValue.value, 10);
-    var newSize = initialSize - ResizeOption.STEP;
+    var newSize = window.util.clamp(parseInt(uploadResizeValue.value, 10) - ResizeOption.STEP, ResizeOption.MIN, ResizeOption.MAX);
+
     updateResizeBtnState(newSize);
+
     if (typeof onSizeChange === 'function') {
-      if (newSize <= ResizeOption.MAX && newSize >= ResizeOption.MIN) {
-        onSizeChange(newSize);
-      }
+      onSizeChange(newSize);
     }
   }
 

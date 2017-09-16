@@ -26,7 +26,6 @@
   var uploadImagePreview = uploadForm.querySelector('.effect-image-preview');
   var uploadHashtags = uploadForm.querySelector('.upload-form-hashtags');
 
-  var newFilter = null;
   var validationMessage = null;
 
   function closeUploadOverlay() {
@@ -42,6 +41,7 @@
   }
 
   function setEffectIntensity(effectName, intensity) {
+    var newFilter = null;
     switch (effectName) {
       case 'chrome':
         newFilter = 'grayscale(' + (intensity / 100).toFixed(1) + ')';
@@ -103,11 +103,11 @@
         validationMessage = 'Комментарий необходимо заполнить';
       } else if (uploadComment.validity.tooShort) {
         validationMessage = 'Комментарий должен быть не меньше '
-          + uploadComment.getAttribute('minlength')
+          + uploadComment.minLength
           + ' символов';
       } else if (uploadComment.validity.tooLong) {
         validationMessage = 'Комментарий должен быть не больше '
-          + uploadComment.getAttribute('maxlength')
+          + uploadComment.maxLength
           + ' символов';
       } else {
         validationMessage = '';
@@ -135,11 +135,20 @@
       var hashtagsString = uploadHashtags.value;
       if (hashtagsString.trim() !== '') {
         var hashTags = hashtagsString.split(' ');
-        hashTags.sort();
-        for (var i = 1; i < hashTags.length; i++) {
-          validationMessage = hashTags[i] === hashTags[i - 1] ? 'Хэштеги не должны повторяться' : '';
-          uploadHashtags.setCustomValidity(validationMessage);
+        var result = [];
+        for (var i = 0; i < hashTags.length; i++) {
+          var item = hashTags[i];
+          if (result.some(function (elem) {
+            return elem === item;
+          })) {
+            validationMessage = 'Хэштеги не должны повторяться';
+            break;
+          } else {
+            validationMessage = '';
+          }
+          result.push(item);
         }
+        uploadHashtags.setCustomValidity(validationMessage);
       }
     });
   }

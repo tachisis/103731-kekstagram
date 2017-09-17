@@ -20,6 +20,7 @@
   var uploadImage = uploadForm.querySelector('.upload-image');
   var uploadOverlay = uploadForm.querySelector('.upload-overlay');
   var uploadCancel = uploadForm.querySelector('.upload-form-cancel');
+  var uploadSubmit = uploadForm.querySelector('.upload-form-submit');
   var uploadComment = uploadForm.querySelector('.upload-form-description');
   var scaleElem = uploadForm.querySelector('.upload-resize-controls');
   var uploadResizeValue = uploadForm.querySelector('.upload-resize-controls-value');
@@ -135,18 +136,15 @@
       var hashtagsString = uploadHashtags.value;
       if (hashtagsString.trim() !== '') {
         var hashTags = hashtagsString.split(' ');
-        var result = [];
+        var result = {};
         for (var i = 0; i < hashTags.length; i++) {
-          var item = hashTags[i];
-          if (result.some(function (elem) {
-            return elem === item;
-          })) {
+          if (result[hashTags[i]]) {
             validationMessage = 'Хэштеги не должны повторяться';
             break;
           } else {
+            result[hashTags[i]] = 1;
             validationMessage = '';
           }
-          result.push(item);
         }
         uploadHashtags.setCustomValidity(validationMessage);
       }
@@ -168,6 +166,7 @@
 
   uploadForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
+    uploadSubmit.disabled = true;
 
     window.backend.save(
         new FormData(uploadForm),
@@ -175,6 +174,7 @@
           window.showMessage('Данные загружены успешно', 'success');
           closeUploadOverlay();
           uploadForm.reset();
+          uploadSubmit.disabled = false;
         },
         function (message) {
           window.showMessage(message, 'error');

@@ -2,6 +2,7 @@
 
 (function () {
   var DEFAULT_LEVEL = 100;
+  var HALF_PIN = 9;
   var uploadEffectLevel = null;
   var uploadEffectLevelPin = null;
   var uploadEffectLevelVal = null;
@@ -48,7 +49,7 @@
     var effectLevelLine = uploadEffectLevel.querySelector('.upload-effect-level-line');
     effectLevelLineLeft = effectLevelLine.getBoundingClientRect().left + pageXOffset;
     effectLevelPinLeft = uploadEffectLevelPin.getBoundingClientRect().left + pageXOffset;
-    shift = evt.pageX - effectLevelPinLeft;
+    shift = evt.pageX - effectLevelPinLeft - HALF_PIN;
 
     effectLevelWidth = effectLevelLine.offsetWidth;
 

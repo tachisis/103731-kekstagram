@@ -178,6 +178,7 @@
         },
         function (message) {
           window.showMessage(message, 'error');
+          uploadSubmit.disabled = false;
         }
     );
   });
